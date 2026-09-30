@@ -33,6 +33,7 @@ Each official repo splits into four `model-0000N.safetensors` shards plus a `mod
 | Type | Name | Task | Precision | Size | Links |
 | :---: | :--- | :---: | :---: | :---: | :---: |
 | ![TE][ltype-te] | **Heretic TE GGUF** | | ![Q4_K_M][badge-Q4_K_M] ![fp8][badge-fp8] ![bf16][badge-bf16] | 33.07 GB | [![][gh-pottokao]](https://huggingface.co/pottokao/Qwen-Image-2.1-Text-Encoder-Heretic-GGUF/resolve/main/qwen3vl_8b_heretic-Q4_K_M.gguf) |
+| ![TE][ltype-te] | **Heretic TE DHQ GGUF** | | ![IQ4_XS][badge-IQ4_XS] ![Q4_K_M][badge-Q4_K_M] ![Q3_K_M][badge-Q3_K_M] | 4.56 GB | [![][gh-pottokao]](https://huggingface.co/pottokao/Qwen-Image-2.1-Text-Encoder-Heretic-DHQ-GGUF) |
 | ![TE][ltype-te] | **Heretic TE NVFP4** | | ![nvfp4][badge-nvfp4] | 6.31 GB | [![][gh-pottokao]](https://huggingface.co/pottokao/Qwen-Image-2.1-Text-Encoder-Heretic-NVFP4/resolve/main/qwen3vl_8b_nvfp4_heretic.safetensors) |
 | ![TE][ltype-te] | **Heretic TE int8 ConvRot** | | ![int8][badge-int8] | 9.35 GB | [![][gh-pottokao]](https://huggingface.co/pottokao/Qwen-Image-2.1-Text-Encoder-Heretic-int8-convrot/resolve/main/qwen3vl_8b_int8_convrot_heretic.safetensors) |
 | ![TE][ltype-te] | **Heretic TE W4A8** | | ![w4a8][badge-w4a8] | 6.31 GB | [![][gh-Karsus1997]](https://huggingface.co/Karsus1997/Qwen-Image-2.1-Text-Encoder-Heretic-W4A8) |
@@ -48,6 +49,8 @@ Each official repo splits into four `model-0000N.safetensors` shards plus a `mod
 | ![PE][ltype-pe] | **PE-I2I Heretic NVFP4** | ![image → image][task-i2i] | ![nvfp4][badge-nvfp4] | 11.20 GB | [![][gh-darrellbest]](https://huggingface.co/darrellbest/Qwen-Image-2.1-PE-I2I-Heretic-NVFP4) |
 
 Start with the **TE GGUF** build if you want one download: Q4_K_M (5.03 GB), fp8 (9.34 GB), bf16 (17.53 GB), plus a 1.16 GB `mmproj` projector, all in one repo.
+
+**DHQ** (Dual-Head Quant) is a sibling of that build, not a different model: the same heretic weights re-quantized so each tensor gets the precision that matters to what the **Qwen 2.1 DiT actually reads** — measured through the DiT's own text-input stage rather than by next-token loss. Every file is byte-for-byte the same *size* as llama.cpp's build of that name and better at it. The ladder runs IQ2_S → IQ4_XS plus Q2_K / Q3_K_M / Q4_K_M, and each one ships its imatrix recipe. Take DHQ below Q5; at Q5 and above the standard recipe already matches it, so there is no reason to. It is tuned for this DiT specifically — Ideogram 4 and the other Qwen3-VL-8B consumers can load the files but were not tuned for.
 
 <p id="pe-quant" align="center">· · · · · · · · · · · · · ·</p>
 

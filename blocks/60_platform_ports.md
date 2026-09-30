@@ -75,9 +75,13 @@ Same weights, re-laid-out for a ComfyUI-side loader. Each ships a YAML manifest 
 
 <p id="port-vae" align="center">· · · · · · · · · · · · · ·</p>
 
-### ▣ Experimental VAE
+### ▣ VAE alternatives
+
+Two drop-in decoder swaps and one preview-only toy. The first is a real finetune; the second is not a VAE at all.
 
 | Name | Precision | Size | Links | Notes |
 | :--- | :---: | :---: | :---: | :--- |
+| **Texture-fix VAE** | ![bf16][badge-bf16] | 0.68 GB | [![][gh-madebyollin]](https://huggingface.co/madebyollin/texture-fix-vae-for-qwen-image-2.1/resolve/main/texture_fix_vae_for_qwen_image_2.1_bf16.safetensors) | **Drop-in replacement** for `qwen_image_2.1_vae_bf16.safetensors`. Decoder-only finetune — 7.5M trainable params, the top two decoder stages plus the output head, ~5,000 steps at 3e-5 with a TAESD recipe (MSE + LPIPS + GAN). Targets checkerboard artifacts and flat texture in photo-style images. rFID 3.37 → **2.08** on COCO at 256², at the cost of PSNR (33.30 → 32.86) and LPIPS (0.0357 → 0.0373): sharper and more plausible, slightly less faithful. Ships a diffusers folder too. |
+| **TAE preview decoder** | ![fp16][badge-f16] | 0.003 GB | [![][gh-AcademiaSD]](https://huggingface.co/AcademiaSD/TAE-Qwen-Image-2.1) | **Not a VAE** — a 1.63M-param 16× approximate decoder for ComfyUI live previews, ~15 ms for 1024² on an RTX 5080. 30.1 dB against Latent2RGB's 20.9. Goes in `models/vae_approx/` and needs **ComfyUI-KJNodes**; the built-in TAESD option will not load it, since that path only handles 8× decoders. **RGB only — it drops the alpha channel**, so never use it for the final decode of an RGBA generation. |
 | **hdr vae test** | ![fp16][badge-fp16] | 0.68 GB | [![][gh-471Def]](https://huggingface.co/471Def/qwen_image_2.1_hdr_vae_test) | Untested in the wild; treat as an experiment, not a drop-in replacement. |
 
